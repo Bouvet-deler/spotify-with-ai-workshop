@@ -24,4 +24,4 @@ class CoverGenerator:
         prompt = image_cover_prompt(track_names)
         imageUrl = self.image_generation_client.generate_image(prompt)
         return imageUrl
-    
+    
