@@ -80,7 +80,7 @@ def fetch_web_api(endpoint, method, body=None):
     Returns:
         Response JSON as dict
     """
-    token = os.getenv("SPOTIFY_ACCESS_TOKEN", token)
+    token = os.getenv("SPOTIFY_ACCESS_TOKEN")
     res = requests.request(
         method,
         f'https://api.spotify.com/{endpoint}',

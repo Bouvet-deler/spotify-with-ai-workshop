@@ -1,0 +1,15 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  text-decoration: none;
+  color: #FFFFFF;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
