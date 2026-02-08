@@ -11,7 +11,7 @@ export const PlaylistCard = ({ playlist }: PlaylistCardProps) => {
     <div className={styles.card}>
       <h3>{playlist.name}</h3>
       <Link to={`/cover/${playlist.id}`}>
-        <button>Generate Cover</button>
+        <button>Generate</button>
       </Link>
     </div>
   );

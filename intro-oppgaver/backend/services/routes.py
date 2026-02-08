@@ -2,14 +2,16 @@ from flask import Blueprint, request, jsonify
 import os
 import tempfile
 import requests
-from image_generator import CoverGenerator
-# from werkzeug.datastructures import FileStorage
+from playlist_generator import CoverGenerator, DescriptionGenerator
 
-# from clients.database import Database
+from clients.blob_storage_client import BlobStorageClient
 from io import BytesIO
 routes = Blueprint('routes', __name__)
 
 cover_generator = CoverGenerator()
+description_generator = DescriptionGenerator()
+blob_storage = BlobStorageClient()
+
 
 @routes.route('/test', methods=['GET'])
 def test():
@@ -46,28 +48,86 @@ def get_tracks_of_playlist():
 @routes.route('/generate-cover', methods=['GET'])
 def generate_cover_image_for_playlist():
     playlist_id = request.args.get('playlist_id')
+    user_id = request.args.get('userId')
 
     if not playlist_id:
         return jsonify({"error": "Missing 'playlist_id' parameter"}), 400
+    
+    if not user_id:
+        return jsonify({"error": "Missing 'userId' parameter"}), 400
 
     try:
         tracks = get_playlist_tracks(playlist_id)
         track_names = [item['track']['name'] for item in tracks]
         
-        # Use the CoverGenerator to create the cover image
-        cover_image_url = cover_generator.generate_cover_image(track_names)
+        # Use the CoverGenerator to create the cover image (returns temporary DALL-E URL)
+        dalle_image_url = cover_generator.generate_cover_image(track_names)
         
-        if cover_image_url:
-            return jsonify({"image_url": cover_image_url}), 200
+        if dalle_image_url:
+            # Upload the image to blob storage and get permanent URL
+            blob_image_url = blob_storage.upload_image_from_url(dalle_image_url, user_id, playlist_id)
+            return jsonify({"image_url": blob_image_url}), 200
         else:
             return jsonify({"error": "Failed to generate cover image"}), 500
     except Exception as e:
         print(f"ERROR in generate_cover_image_for_playlist: {str(e)}")
         return jsonify({"error": f"Failed to process request: {str(e)}"}), 500
 
-# curl "http://127.0.0.1:5000/get-tracks?playlist_id=0Ux3Z2CwlFZMPDVWvweyBZ"
-# curl "http://127.0.0.1:5000/generate-cover?playlist_id=0Ux3Z2CwlFZMPDVWvweyBZ"
 
+@routes.route('/generate-description', methods=['GET'])
+def generate_description_for_playlist():
+    playlist_id = request.args.get('playlist_id')
+    user_id = request.args.get('userId')
+
+    if not playlist_id:
+        return jsonify({"error": "Missing 'playlist_id' parameter"}), 400
+    
+    if not user_id:
+        return jsonify({"error": "Missing 'userId' parameter"}), 400
+
+    try:
+        tracks = get_playlist_tracks(playlist_id)
+        track_names = [item['track']['name'] for item in tracks]
+        description = description_generator.generate_description(track_names)
+        
+        if description:
+            return jsonify({"description": description}), 200
+        else:
+            return jsonify({"error": "Failed to generate description"}), 500
+    except Exception as e:
+        print(f"ERROR in generate_description_for_playlist: {str(e)}")
+        return jsonify({"error": f"Failed to process request: {str(e)}"}), 500
+
+
+@routes.route('/cover-images', methods=['GET'])
+def get_cover_images():
+    user_id = request.args.get('userId')
+    
+    if not user_id:
+        return jsonify({"error": "user_id query parameter is required"}), 400
+
+    try:
+        cover_images = blob_storage.list_user_covers(user_id)
+        
+        # Fetch all playlists to get names
+        try:
+            playlists = get_playlists()
+            playlist_map = {p['id']: p['name'] for p in playlists}
+            
+            # Add playlist names to cover images
+            for cover in cover_images:
+                playlist_id = cover.get('playlistId')
+                cover['playlistName'] = playlist_map.get(playlist_id, 'Unknown Playlist')
+        except Exception as e:
+            print(f"WARNING: Could not fetch playlist names: {str(e)}")
+            # Continue without playlist names
+            for cover in cover_images:
+                cover['playlistName'] = 'Unknown Playlist'
+        
+        return jsonify(cover_images), 200
+    except Exception as e:
+        print(f"ERROR in get_cover_images: {str(e)}")
+        return jsonify({"error": "An error occurred while processing your request."}), 500
 
 
 def fetch_web_api(endpoint, method, body=None):

@@ -3,14 +3,18 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { Track } from "../model/Playlist";
 import { Spinner } from "../components/Spinner/Spinner";
+import { useUserId } from "../hooks/useUserId.ts";
 import styles from "./CoverGeneratorPage.module.css";
 
 export const CoverGeneratorPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>();
+  const userId = useUserId();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
+  const [description, setDescription] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [generatingDescription, setGeneratingDescription] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,13 +41,27 @@ export const CoverGeneratorPage = () => {
     try {
       setGenerating(true);
       setError(null);
-      const response = await axios.get(`/api/generate-cover?playlist_id=${playlistId}`);
+      const response = await axios.get(`/api/generate-cover?playlist_id=${playlistId}&userId=${userId}`);
       setCoverUrl(response.data.image_url);
     } catch (err) {
       console.error("Error generating cover:", err);
       setError("Failed to generate cover. Please try again.");
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const generateDescription = async () => {
+    try {
+      setGeneratingDescription(true);
+      setError(null);
+      const response = await axios.get(`/api/generate-description?playlist_id=${playlistId}&userId=${userId}`);
+      setDescription(response.data.description);
+    } catch (err) {
+      console.error("Error generating description:", err);
+      setError("Failed to generate description. Please try again.");
+    } finally {
+      setGeneratingDescription(false);
     }
   };
 
@@ -68,7 +86,7 @@ export const CoverGeneratorPage = () => {
         <button className={styles.backButton}>← Back to Playlists</button>
       </Link>
 
-      <h1>Generate Cover Image</h1>
+      {/* <h1>Generate</h1> */}
 
       <div className={styles.tracksSection}>
         <h2>Tracks in Playlist ({tracks.length})</h2>
@@ -91,6 +109,14 @@ export const CoverGeneratorPage = () => {
         {generating ? "Generating..." : "Generate AI Cover Image"}
       </button>
 
+      <button
+        onClick={generateDescription}
+        disabled={generatingDescription || tracks.length === 0}
+        className={styles.generateButton}
+      >
+        {generatingDescription ? "Generating..." : "Generate AI Description"}
+      </button>
+
       {generating && (
         <div className={styles.generatingSection}>
           <Spinner />
@@ -98,7 +124,14 @@ export const CoverGeneratorPage = () => {
         </div>
       )}
 
-      {error && coverUrl === null && (
+      {generatingDescription && (
+        <div className={styles.generatingSection}>
+          <Spinner />
+          <p>Creating your playlist description...</p>
+        </div>
+      )}
+
+      {error && coverUrl === null && description === null && (
         <p style={{ color: "red", marginTop: "1rem" }}>{error}</p>
       )}
 
@@ -106,6 +139,13 @@ export const CoverGeneratorPage = () => {
         <div className={styles.coverSection}>
           <h2>Generated Cover</h2>
           <img src={coverUrl} alt="Generated playlist cover" className={styles.coverImage} />
+        </div>
+      )}
+      
+      {description && (
+        <div className={styles.coverSection}>
+          <h2>Generated Description</h2>
+          <p className={styles.description}>{description}</p>
         </div>
       )}
     </div>
