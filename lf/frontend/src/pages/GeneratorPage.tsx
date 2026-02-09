@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { Track } from "../model/Playlist";
-import { Spinner } from "../components/Spinner/Spinner";
+import { Track } from "../model/Playlist.ts";
+import { Spinner } from "../components/Spinner/Spinner.tsx";
 import { useUserId } from "../hooks/useUserId.ts";
-import styles from "./CoverGeneratorPage.module.css";
+import styles from "./GeneratorPage.module.css";
 
-export const CoverGeneratorPage = () => {
+export const GeneratorPage = () => {
   const { playlistId } = useParams<{ playlistId: string }>();
   const userId = useUserId();
   const [tracks, setTracks] = useState<Track[]>([]);

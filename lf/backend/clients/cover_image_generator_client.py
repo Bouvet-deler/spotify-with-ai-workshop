@@ -15,9 +15,9 @@ class CoverImageGeneratorClient:
         try:
             print(f"Generating image with prompt: {prompt[:100]}...")  # Debug log
             response = self.client.images.generate(
-                model="",  # TODO: oppgave 2.1.2 Sett riktig modell her
+                model="dall-e-3",  # TODO: oppgave 2.1.2 Sett riktig modell her
                 prompt=prompt,
-                size="",  # TODO: oppgave 2.1.3 Sett riktig størrelse her
+                size="1024x1024",  # TODO: oppgave 2.1.3 Sett riktig størrelse her
                 quality="standard",
                 n=1,
             )
