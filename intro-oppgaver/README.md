@@ -162,12 +162,12 @@ Når du har fullført oppgaven, skal det være mulig å klikke på knappen fra f
 
 ### 2.2 TEKSTGENERERING 💬
 
-Klassen LangueModelClient bruker OpenAI sin GPT-4-modell via Azure for å generere tekst basert på en prompt.
+Klassen LangueModelClient bruker OpenAI sin gpt-5-mini-modell via Azure for å generere tekst basert på en prompt.
 **Oppgave**
 
-1. Naviger til `llm_client` i backend.
+1. Naviger til `PlaylistDescriptionGeneratorClient` i backend.
 
-2. Sett modellen til **"gpt-4o-mini"**.
+2. Sett modellen til **"gpt-5-mini"**.
 
 
 ### 2.3 Forbedre Prompten 💡
@@ -176,7 +176,7 @@ _En godt formulert prompt er avgjørende for å generere relevante og presise re
 
 #### Oppgave
 
-1. Gå gjennom eksisterende tekst i prompten i `recipe_generator.py`.
+1. Gå gjennom eksisterende tekst i prompten i `playlist_generator.py`.
 
 2. Sørg for at prompten er klar, spesifikk og inkluderer all nødvendig kontekst for å generere en oppskrift av høy
    kvalitet.

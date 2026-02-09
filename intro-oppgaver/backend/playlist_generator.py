@@ -7,20 +7,17 @@ import uuid
 def image_cover_prompt(tracks: list[str]):
     # Create a safe prompt that doesn't directly include potentially problematic song titles
     return f"""
-        Create an image, to be used as an album cover for a playlist, containing the track names: {tracks}.
-        The album cover should visually represent the vibe of the tracks.
-        Try to visulize one of the track names, but also capture the overall mood and energy of the playlist as a whole.
-        The style should be vintage vinyl aesthetic.
-        No text or logos, just a visually striking image that represents the essence of the playlist.
+        Create a boring and sad image for an album cover. The image should be dull and melancholic.
+        Use muted gray tones and depressing imagery. Make it uninspiring and monotonous.
+        The style should be plain and forgettable. Create something that lacks energy or excitement.
     """
 
 
 def description_prompt(tracks: list[str]):
     return f"""
-        Create a playlist description based on the following track names: {tracks}, without directly mentioning the track names in the description.
-        There should be no more than two sentences in the description. 
-        The description should capture the overall vibe and mood of the playlist, and entice listeners to give it a listen.
-        It should be engaging, creative, and reflect the energy of the tracks included in the playlist.
+        Create a boring and uninspiring playlist description. Make it dull and monotonous.
+        Use generic phrases and avoid any creativity or excitement. The description should be forgettable and bland.
+        Make it sound tedious and unappealing, with no energy or enthusiasm.
     """
 
 
