@@ -84,6 +84,28 @@ _I oppgave 1 skal vi benytte oss av Spotify sitt API for å hente spillelistene 
 _ For å få til dette skal vi sette opp .env-fil, backend-route, og koble dette til frontend._
 
 ---
+### 1.0 Legg til riktig token fra Spotify
+
+_For å få tilgang til dine Spotify-spillelister, trenger vi riktig token._
+
+**Oppgave**
+
+1. Gå til https://developer.spotify.com/
+2. Logg inn og scroll ned til **Code**
+3. Kopier token fra kodeeksemplet – dette er din token for å få tilgang til Spotify API'et
+4. Naviger til `.env`-filen og lim inn token fra Spotify for `SPOTIFY_ACCESS_TOKEN`
+
+**Eksempel:**
+
+Fra https://developer.spotify.com/:
+```javascript
+const token = 'eksempel_token123'
+```
+I .env filen:
+```
+SPOTIFY_ACCESS_TOKEN='eksempel_token123'
+```
+
 
 ### 1.1 Opprett en route i Frontend for å vise hjemsiden
 
@@ -180,6 +202,4 @@ _En godt formulert prompt er avgjørende for å generere relevante og presise re
 
 2. Sørg for at prompten er klar, spesifikk og inkluderer all nødvendig kontekst for å generere en oppskrift av høy
    kvalitet.
-
-
 
