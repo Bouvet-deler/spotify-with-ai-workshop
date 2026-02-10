@@ -2,31 +2,31 @@ import openai
 from openai import AzureOpenAI
 import os
 
-
-class PlaylistDescriptionGeneratorClient:
+class CoverImageGeneratorClient:
     def __init__(self):
-        base_url = os.getenv("AZURE_OPENAI_BASE_URL")
         self.client = AzureOpenAI(
-            api_version="2025-01-01-preview",
-            azure_endpoint=base_url,
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+            api_version="2024-02-01",
+            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            azure_deployment="dall-e-3"
         )
 
-    def generate_description(self, prompt: str) -> str:
+    def generate_image(self, prompt: str) -> str:
         try:
-            response = self.client.chat.completions.create(
-                model="gpt-5",  # TODO: oppgave 2.2.2 Sett riktig modell her
-                messages=[{"role": "user", "content": prompt}],
-                max_completion_tokens=10000,
+            print(f"Generating image with prompt: {prompt[:100]}...")  # Debug log
+            response = self.client.images.generate(
+                model="dall-e-3",
+                prompt=prompt,
+                size="1024x1024",
+                quality="standard",
+                n=1,
             )
 
-            content = response.choices[0].message.content
-            if content is None:
-                print("DEBUG: Content is None")
-                return None
-            description = content.strip()
-            return description
+            image_url = response.data[0].url
+            print(f"Successfully generated image: {image_url}")  # Debug log
+            return image_url
 
+        # catch exceptions
         except openai.APIConnectionError as e:
             print("ERROR: The server could not be reached")
             print(e.__cause__)  # an underlying Exception, likely raised within httpx.
