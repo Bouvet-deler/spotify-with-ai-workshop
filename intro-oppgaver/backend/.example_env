@@ -1,8 +1,12 @@
-AZURE_TABLE_API_KEY=
+# Azure Storage (Blob + Tables)
+AZURE_BLOB_STORAGE_CONNECTION_STRING=
+AZURE_BLOB_STORAGE_CONTAINER_NAME=playlist-images
+
+# Azure OpenAI / AI Foundry
 AZURE_OPENAI_API_KEY=
-AZURE_OPENAI_ENDPOINT=
-AZURE_CUSTOM_VISION_PRED_KEY=
-AZURE_CUSTOM_VISION_ENDPOINT=h
-# AZURE_CUSTOM_VISION_PROJECT_ID=your_azure_custom_vision_project_id_here
-# AZURE_CUSTOM_VISION_PUBLISH_ITERATION_NAME=your_azure_custom_vision_publish_iteration
+AZURE_OPENAI_BASE_URL=https://aif-sc-workshop.cognitiveservices.azure.com
+AZURE_OPENAI_IMAGE_ENDPOINT=/openai/deployments/gpt-image-1/images/generations?api-version=2025-04-01-preview
+AZURE_OPENAI_CHAT_ENDPOINT=/openai/deployments/gpt-5/chat/completions?api-version=2025-01-01-preview
+
+#Spotify API access token
 SPOTIFY_ACCESS_TOKEN=
