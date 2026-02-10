@@ -2,15 +2,17 @@ from flask import Blueprint, request, jsonify
 import os
 import tempfile
 import requests
-from playlist_generator import CoverGenerator, DescriptionGenerator
+from playlist_generator import CoverGenerator, DescriptionGenerator, description_prompt
 
 from clients.blob_storage_client import BlobStorageClient
+from clients.table_storage_client import TableStorageClient
 from io import BytesIO
 routes = Blueprint('routes', __name__)
 
 cover_generator = CoverGenerator()
 description_generator = DescriptionGenerator()
 blob_storage = BlobStorageClient()
+table_storage = TableStorageClient()
 
 
 @routes.route('/test', methods=['GET'])
@@ -60,18 +62,29 @@ def generate_cover_image_for_playlist():
         tracks = get_playlist_tracks(playlist_id)
         track_names = [item['track']['name'] for item in tracks]
         
-        # Use the CoverGenerator to create the cover image (returns temporary DALL-E URL)
+        # Use the CoverGenerator to create the cover image (returns base64 data URL)
         dalle_image_url = cover_generator.generate_cover_image(track_names)
         
-        if dalle_image_url:
-            # Upload the image to blob storage and get permanent URL
-            blob_image_url = blob_storage.upload_image_from_url(dalle_image_url, user_id, playlist_id)
+        if not dalle_image_url:
+            return jsonify({"error": "Failed to generate cover image"}), 500
+        
+        # Upload the image to blob storage and get permanent URL
+        blob_image_url = blob_storage.upload_image_from_url(dalle_image_url, user_id, playlist_id)
+        
+        if blob_image_url:
             return jsonify({"image_url": blob_image_url}), 200
         else:
-            return jsonify({"error": "Failed to generate cover image"}), 500
+            return jsonify({"error": "Failed to upload image to storage"}), 500
+            
     except Exception as e:
-        print(f"ERROR in generate_cover_image_for_playlist: {str(e)}")
-        return jsonify({"error": f"Failed to process request: {str(e)}"}), 500
+        error_msg = str(e)
+        # Truncate error message if it contains base64 data
+        if len(error_msg) > 200:
+            error_msg = error_msg[:200] + "... (truncated)"
+        print(f"ERROR in generate_cover_image_for_playlist: {error_msg}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Failed to process request"}), 500
 
 
 @routes.route('/generate-description', methods=['GET'])
@@ -91,11 +104,29 @@ def generate_description_for_playlist():
         description = description_generator.generate_description(track_names)
         
         if description:
+            # Get playlist name for table storage record
+            try:
+                playlists = get_playlists()
+                playlist_name = next((p['name'] for p in playlists if p['id'] == playlist_id), 'Unknown Playlist')
+            except Exception as e:
+                print(f"WARNING: Could not fetch playlist name: {str(e)}")
+                playlist_name = 'Unknown Playlist'
+            
+            # Save description record to table storage
+            try:
+                prompt = description_prompt(track_names)
+                table_storage.save_description_record(playlist_id, playlist_name, description, prompt)
+            except Exception as e:
+                print(f"WARNING: Could not save to table storage: {str(e)}")
+                # Don't fail the request if table storage fails
+            
             return jsonify({"description": description}), 200
         else:
             return jsonify({"error": "Failed to generate description"}), 500
     except Exception as e:
         print(f"ERROR in generate_description_for_playlist: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return jsonify({"error": f"Failed to process request: {str(e)}"}), 500
 
 

@@ -5,19 +5,38 @@ from clients.playlist_description_generator_client import PlaylistDescriptionGen
 import uuid
 
 def image_cover_prompt(tracks: list[str]):
-    # Create a safe prompt that doesn't directly include potentially problematic song titles
+    # Format track list for context
+    track_list = "\n".join(f"- {track}" for track in tracks[:100])  # Limit to first 100 tracks
     return f"""
-        Create a boring and sad image for an album cover. The image should be dull and melancholic.
-        Use muted gray tones and depressing imagery. Make it uninspiring and monotonous.
-        The style should be plain and forgettable. Create something that lacks energy or excitement.
+        You are a music lover and graphic designer tasked with creating an album cover image for a playlist.
+        Use your knowledge of the artists, genres, and themes of the songs to design a visually compelling cover that captures the mood and essence of the playlist.
+        Create an album cover image for a playlist with the following tracks:
+        
+{track_list}
+
+        Design a visually compelling album cover that captures the mood and essence of these songs.
+        The image should be cohesive, professional, and suitable for a playlist cover.
+        Consider the themes, genres, and emotional tone of the tracks when choosing colors and imagery.
+        Make it visually interesting and memorable.
     """
 
 
 def description_prompt(tracks: list[str]):
+    # Format track list for context
+    track_list = "\n".join(f"- {track}" for track in tracks[:100])  # Limit to first 100 tracks
     return f"""
-        Create a boring and uninspiring playlist description. Make it dull and monotonous.
-        Use generic phrases and avoid any creativity or excitement. The description should be forgettable and bland.
-        Make it sound tedious and unappealing, with no energy or enthusiasm.
+        You are a music enthusiast and copywriter tasked with writing a playlist description.
+        Use your knowledge of the artists, genres, and themes of the songs to craft a compelling description that captures the mood and vibe of the playlist.
+        Create an engaging playlist description for a playlist containing these tracks:
+        
+{track_list}
+
+        Write a compelling 2-3 sentence description that:
+        - Captures the overall mood and vibe of the playlist
+        - Highlights what makes these songs work well together
+        - Entices listeners to play the playlist
+        
+        Be creative, authentic, and avoid generic phrases.
     """
 
 
