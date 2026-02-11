@@ -18,9 +18,9 @@ class CoverImageGeneratorClient:
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
             }
-            
+            # TODO: Fullfør payload med nødvendige parametere for Azure AI Foundry
             payload = {
-                "prompt": prompt,
+                "prompt": "",
                 "size": "1024x1024",
                 "quality": "medium",
                 "output_compression": 100,
@@ -28,14 +28,13 @@ class CoverImageGeneratorClient:
                 "n": 1
             }
             
+            # TODO: Fullfør API-kallet til Azure AI Foundry for å generere bildet, hvor skal du sende payload og hva skal du sende i json-body?           
             response = requests.post(
-                self.endpoint,
+                "",
                 headers=headers,
-                json=payload,
+                json="",
                 timeout=60
             )
-                        
-            response.raise_for_status()
             result = response.json()
             
             # Azure AI Foundry returns base64 encoded image data
@@ -50,14 +49,10 @@ class CoverImageGeneratorClient:
                 print("ERROR: No b64_json in response")
                 return None
 
-        # catch exceptions
         except requests.exceptions.RequestException as e:
             print(f"ERROR: Request failed: {type(e).__name__}: {str(e)}")
             if hasattr(e, 'response') and e.response is not None:
                 print(f"ERROR Response: {e.response.text}")
-            return None
-        except Exception as e:
-            print(f"ERROR: Unexpected exception occurred: {type(e).__name__}: {str(e)}")
             return None
         except Exception as e:
             print(f"ERROR: Unexpected exception occurred: {type(e).__name__}: {str(e)}")

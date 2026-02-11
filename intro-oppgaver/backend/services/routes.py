@@ -57,7 +57,8 @@ def generate_cover_image_for_playlist():
         return jsonify({"error": "Missing 'userId' parameter"}), 400
 
     try:
-        tracks = get_playlist_tracks(playlist_id)
+        # TODO: Hent ut sangene fra spillelisten ved å kalle get_playlist_tracks(playlist_id)
+        tracks = list()  # Placeholder, erstatt med faktisk kall til get_playlist_tracks
         track_names = [item['track']['name'] for item in tracks]
         
         # Use the CoverGenerator to create the cover image (returns temporary DALL-E URL)
@@ -88,7 +89,8 @@ def generate_description_for_playlist():
     try:
         tracks = get_playlist_tracks(playlist_id)
         track_names = [item['track']['name'] for item in tracks]
-        description = description_generator.generate_description(track_names)
+        # TODO: Kall metoden for å generere beskrivelse i DescriptionGenerator, hva skal du sende inn? Hva får du tilbake?
+        description = ""  # Placeholder, erstatt med faktisk kall til description_generator
         
         if description:
             return jsonify({"description": description}), 200
@@ -157,6 +159,7 @@ def fetch_web_api(endpoint, method, body=None):
 
 def get_playlists():
     """Get user's playlists"""
+        
     return fetch_web_api(
         'v1/me/playlists',
         'GET'
@@ -172,9 +175,11 @@ def get_playlist_tracks(playlist_id):
     Returns:
         List of tracks in the playlist
     """
+    # TODO: Hvilken HTTP-metode skal brukes for å hente spillelistens sanger fra Spotify Web API? Trenger vi å sende noen data i body for dette kallet?
+    # https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
     return fetch_web_api(
         f'v1/playlists/{playlist_id}/tracks',
-        'GET'
+        ''
     )['items']
 
 

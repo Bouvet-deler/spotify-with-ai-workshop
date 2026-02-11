@@ -48,8 +48,11 @@ class BlobStorageClient:
                 response.raise_for_status()
                 image_data = BytesIO(response.content)
             
-            # Create a unique blob name
-            blob_name = f"covers/{user_id}/{playlist_id}.png"
+            # TODO: Create a unique blob name for storage
+            # Follow the pattern: "covers/{user_id}/{playlist_id}.png"
+            # This hierarchical structure helps organize blobs by user and playlist
+            
+            blob_name = f""
             
             # Upload to blob storage
             blob_client = self.blob_service_client.get_blob_client(
@@ -76,7 +79,7 @@ class BlobStorageClient:
             print(f"Blob properties: container={self.container_name}, blob={blob_name}")
             
             return blob_url
-            
+
         except requests.RequestException as e:
             print(f"ERROR downloading image: {str(e)}")
             raise Exception(f"Failed to download image from URL: {str(e)}")
@@ -96,7 +99,8 @@ class BlobStorageClient:
         """
         try:
             prefix = f"covers/{user_id}/"
-            blob_list = self.container_client.list_blobs(name_starts_with=prefix)
+            # TODO: Hent ut alle blobs for denne brukeren ved å bruke list_blobs med name_starts_with=prefix
+            blob_list = []  # Placeholder, erstatt med faktisk kall til list_blobs
             
             cover_images = []
             for blob in blob_list:
