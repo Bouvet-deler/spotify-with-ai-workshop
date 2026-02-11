@@ -48,9 +48,8 @@ class BlobStorageClient:
                 response.raise_for_status()
                 image_data = BytesIO(response.content)
             
-            # TODO: Create a unique blob name for storage
-            # Follow the pattern: "covers/{user_id}/{playlist_id}.png"
-            # This hierarchical structure helps organize blobs by user and playlist
+            # TODO: Lag et unikt navn for blobben som skal lagres i Azure Blob Storage
+            # pattern: "covers/{user_id}/{playlist_id}.png"
             
             blob_name = f""
             

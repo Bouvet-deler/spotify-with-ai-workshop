@@ -15,7 +15,7 @@ class PlaylistDescriptionGeneratorClient:
     def generate_description(self, prompt: str) -> str:
         try:
             response = self.client.chat.completions.create(
-                model="gpt-5",  # TODO: oppgave 2.2.2 Sett riktig modell her
+                model="gpt-5",  
                 messages=[{"role": "user", "content": prompt}],
                 max_completion_tokens=10000,
             )

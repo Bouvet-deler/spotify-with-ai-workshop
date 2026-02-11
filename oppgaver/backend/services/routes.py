@@ -44,8 +44,8 @@ def get_tracks_of_playlist():
         print(f"Track: {track['name']} by {', '.join(artist['name'] for artist in track['artists'])}")
     return jsonify(tracks), 200
 
-# TODO: 1.3.2 'Implement the route for generating cover image for a playlist
-@routes.route('/TODO', methods=['TODO'])
+
+@routes.route('/generate-cover', methods=['GET'])
 def generate_cover_image_for_playlist():
     playlist_id = request.args.get('playlist_id')
     user_id = request.args.get('userId')
@@ -57,17 +57,17 @@ def generate_cover_image_for_playlist():
         return jsonify({"error": "Missing 'userId' parameter"}), 400
 
     try:
-        tracks = get_playlist_tracks(playlist_id)
+        # TODO: Hent ut sangene fra spillelisten ved å kalle get_playlist_tracks(playlist_id)
+        tracks = list()  # Placeholder, erstatt med faktisk kall til get_playlist_tracks
         track_names = [item['track']['name'] for item in tracks]
         
-        # TODO 1.3.3: Find out witch class and method from you should use to generate the cover image, and call it here to get the DALL-E image URL
-        dalle_image_url = "TODO"
+        # Use the CoverGenerator to create the cover image (returns temporary DALL-E URL)
+        dalle_image_url = cover_generator.generate_cover_image(track_names)
         
         if dalle_image_url:
             # Upload the image to blob storage and get permanent URL
             blob_image_url = blob_storage.upload_image_from_url(dalle_image_url, user_id, playlist_id)
-             # TODO 1.3.4: Return the blob_image_url in the response so it can be used in the frontend to display the image
-            return "todo", 200
+            return jsonify({"image_url": blob_image_url}), 200
         else:
             return jsonify({"error": "Failed to generate cover image"}), 500
     except Exception as e:
@@ -89,7 +89,8 @@ def generate_description_for_playlist():
     try:
         tracks = get_playlist_tracks(playlist_id)
         track_names = [item['track']['name'] for item in tracks]
-        description = description_generator.generate_description(track_names)
+        # TODO: Kall metoden for å generere beskrivelse i DescriptionGenerator, hva skal du sende inn? Hva får du tilbake?
+        description = ""  # Placeholder, erstatt med faktisk kall til description_generator
         
         if description:
             return jsonify({"description": description}), 200
@@ -158,6 +159,7 @@ def fetch_web_api(endpoint, method, body=None):
 
 def get_playlists():
     """Get user's playlists"""
+        
     return fetch_web_api(
         'v1/me/playlists',
         'GET'
@@ -173,9 +175,11 @@ def get_playlist_tracks(playlist_id):
     Returns:
         List of tracks in the playlist
     """
+    # TODO: Hvilken HTTP-metode skal brukes for å hente spillelistens sanger fra Spotify Web API? Trenger vi å sende noen data i body for dette kallet?
+    # https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
     return fetch_web_api(
         f'v1/playlists/{playlist_id}/tracks',
-        'GET'
+        ''
     )['items']
 
 
