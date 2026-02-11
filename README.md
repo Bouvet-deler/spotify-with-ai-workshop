@@ -6,8 +6,7 @@ I denne workshoppen skal vi utforske hvordan kunstig intelligens (AI) kan integr
 
 ## 🌟 Hva skal vi lage?
 
-Applikasjonen vi jobber med, lar deg analyser spillelistene dine fra Spotify. Deretter vil AI-modellen :
-
+Applikasjonen vi skal lage i dag skal generere AI-inhhold basert på spillelistene dine fra Spotify. Vi skal bruke RESTful API og Azure SDK i python og react.
 
 
 Ved slutten av workshoppen vil du ha en fullverdig applikasjon som demonstrerer hvordan AI kan integreres i ulike steg av et system.
@@ -16,20 +15,11 @@ Ved slutten av workshoppen vil du ha en fullverdig applikasjon som demonstrerer 
 
 - **Frontend**: React med TypeScript
 - **Backend**: Python med relevante AI-biblioteker
-- **AI-modeller**:
-- **Database**: Azure data tables
+- **AI-modeller**: Azure AI Foundry (gpt-5, gpt-image-1)
+- **Database**: Azure data tables og Azure Blob Storage
 
-## 📚 Velg riktig oppgavetype
+## 📚 Oppgavene
 
-For å tilpasse læringsnivået har vi delt oppgavene i to kategorier:
+Oppgavene er merket med **TODO**, og befinner seg i frontend, backend og .env filer. Det finnes også et løsningsforslag i ./lf mappen hvis du trenger hjelp eller inspirasjon. 
 
-### 🔹 Intro-oppgaver (for 1.- og 2.-klassinger)
 
-- Enkle oppgaver for å bli kjent med **grunnleggende React og Python-kunnskaper**.
-- Grunnleggende bruk av **AI-modeller**.
-
-### 🔹 Oppgaver (for 3.- og 5.-klassinger )
-
-- Gir en **helhetlig forståelse av systemutvikling** og hvordan frontend og backend jobber sammen.
-- Involverer både **React og TypeScript** i frontend samt **AI-integrasjoner** i backend.
-- Mer fokus på **databaser, API-er** og samspillet mellom ulike teknologier.

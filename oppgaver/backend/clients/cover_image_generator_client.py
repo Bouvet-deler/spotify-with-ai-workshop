@@ -18,7 +18,7 @@ class CoverImageGeneratorClient:
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json"
             }
-            # TODO: Fullfør payload med nødvendige parametere for Azure AI Foundry
+            # TODO: 2.1 Fullfør payload med nødvendige parametere: "model": "gpt-image-1" og "prompt": med prompt-parameteren
             payload = {
                 "prompt": "",
                 "size": "1024x1024",
@@ -28,7 +28,7 @@ class CoverImageGeneratorClient:
                 "n": 1
             }
             
-            # TODO: Fullfør API-kallet til Azure AI Foundry for å generere bildet, hvor skal du sende payload og hva skal du sende i json-body?           
+            # TODO: 2.1 Fullfør API-kallet: send til self.endpoint med payload i json-body           
             response = requests.post(
                 "",
                 headers=headers,

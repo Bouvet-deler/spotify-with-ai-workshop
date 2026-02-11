@@ -106,6 +106,9 @@ I .env filen:
 SPOTIFY_ACCESS_TOKEN='eksempel_token123'
 ```
 
+I tillegg:
+I routes.py finnes det flere metoder som via fetch_web_app kaller på Spotify sine Rest endepunkt. I metoden get_playlist_tracks mangler vi å spesifisere metoden for rest kallet. Sjekk ut dokumentasjonen til Spotify, og legg til rett metode.
+
 
 ### 1.1 Opprett en route i Frontend for å vise hjemsiden
 
@@ -175,21 +178,25 @@ Klassen `CoverImageGeneratorClient` er laget for å samhandle med OpenAI’s DAL
 
 1. Naviger til `cover_image_generator_client.py` i backend.
 
-2. Sett modellen til **"dall-e-3"**.
+2. Fullfør payload med de nødvendige parameterne:
+   - `model`: skal være **"gpt-image-1"** (hentet fra .env)
+   - `prompt`: skal inneholde prompt-teksten som blir sendt inn
 
-3. Endre størrelsen på bilde til å være **1024x1024**.
+3. Fullfør API-kallet:
+   - `url`: skal peke til `self.endpoint`
+   - `json`: skal inneholde `payload`
 4. 
 
 Når du har fullført oppgaven, skal det være mulig å klikke på knappen fra forrige oppgave og generere et AI-coverbilde basert på sangene i spillelisten.
 
 ### 2.2 TEKSTGENERERING 💬
 
-Klassen LangueModelClient bruker OpenAI sin gpt-5-mini-modell via Azure for å generere tekst basert på en prompt.
+Klassen `PlaylistDescriptionGeneratorClient` bruker OpenAI sin GPT-5-modell via Azure for å generere tekst basert på en prompt.
 **Oppgave**
 
 1. Naviger til `PlaylistDescriptionGeneratorClient` i backend.
 
-2. Sett modellen til **"gpt-5-mini"**.
+2. Sett modellen til **"gpt-5"** (hentet fra .env `AZURE_OPENAI_CHAT_ENDPOINT`).
 
 
 ### 2.3 Forbedre Prompten 💡
@@ -202,4 +209,47 @@ _En godt formulert prompt er avgjørende for å generere relevante og presise re
 
 2. Sørg for at prompten er klar, spesifikk og inkluderer all nødvendig kontekst for å generere en oppskrift av høy
    kvalitet.
+
+### 2.4 Lagre Coverbilde til Blob Storage ☁️
+
+_Når vi har generert et coverbilde med DALL-E 3, må vi lagre det i Azure Blob Storage for permanent lagring._
+
+**Oppgave**
+
+1. Naviger til `clients/blob_storage_client.py` i backend.
+
+2. I metoden `upload_image_from_url`, finn kommentaren `# TODO: 2.4 Lag et unikt navn for blobben...`
+   - Lag et unikt navn som følger mønsteret `covers/{user_id}/{playlist_id}.png`
+   - Husk å bruke variablene `user_id` og `playlist_id` som blir sendt inn
+
+3. Fullfør også kallet til `upload_image_from_url` i `routes.py` (linje 60) ved å kalle `get_playlist_tracks(playlist_id)` for å hente sangene fra spillelisten.
+
+Når du har fullført oppgaven, skal coverimagene bli lagret permanent i Azure Blob Storage.
+
+### 2.5 Liste Cover Images 📸
+
+_Vi må kunne hente alle lagrede coverimagene for en bruker fra Blob Storage._
+
+**Oppgave**
+
+1. Naviger til `clients/blob_storage_client.py` i backend.
+
+2. I metoden `list_user_covers`, finn kommentaren `# TODO: 2.5 Hent ut alle blobs...`
+   - Bruk `self.container_client.list_blobs(name_starts_with=prefix)` for å hente alle blobs som starter med brukerens prefix
+   - Tilordne resultatet til `blob_list`
+
+Når du har fullført oppgaven, skal du kunne se alle genererte coverimagene for en bruker på `CoverImageListPage`.
+
+### 2.6 TEKSTGENERERING FOR BESKRIVELSE 💬
+
+_Når vi har sangene fra spillelisten, skal vi generere en beskrivelse ved hjelp av GPT._
+
+**Oppgave**
+
+1. Naviger til `services/routes.py` i backend, og finn `generate_description_for_playlist`-metoden.
+
+2. Finn kommentaren `# TODO: 2.6 Kall metoden for å generere beskrivelse...`
+   - Kall `description_generator.generate_description(track_names)` og tilordne resultatet til `description`-variabelen
+
+Når du har fullført oppgaven, skal du kunne generere en AI-basert tekstbeskrivelse av spillelisten.
 

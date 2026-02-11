@@ -14,8 +14,8 @@ class PlaylistDescriptionGeneratorClient:
 
     def generate_description(self, prompt: str) -> str:
         try:
-            response = self.client.chat.completions.create(
-                model="gpt-5",  # TODO: Sett riktig modell her, sjekk .env filen for hvilke modeller som er tilgjengelige i din Azure OpenAI-ressurs
+                response = self.client.chat.completions.create(
+                model="gpt-5",  # TODO: 2.2 Bruk "gpt-5" modellen 
                 messages=[{"role": "user", "content": prompt}],
                 max_completion_tokens=10000,
             )

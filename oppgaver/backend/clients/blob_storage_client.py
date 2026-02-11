@@ -48,7 +48,7 @@ class BlobStorageClient:
                 response.raise_for_status()
                 image_data = BytesIO(response.content)
             
-            # TODO: Lag et unikt navn for blobben som skal lagres i Azure Blob Storage
+            # TODO: 2.4 Lag et unikt navn for blobben som skal lagres i Azure Blob Storage
             # pattern: "covers/{user_id}/{playlist_id}.png"
             
             blob_name = f""
@@ -98,7 +98,7 @@ class BlobStorageClient:
         """
         try:
             prefix = f"covers/{user_id}/"
-            # TODO: Hent ut alle blobs for denne brukeren ved å bruke list_blobs med name_starts_with=prefix
+            # TODO: 2.5 Hent ut alle blobs for denne brukeren ved å bruke list_blobs med name_starts_with=prefix
             blob_list = []  # Placeholder, erstatt med faktisk kall til list_blobs
             
             cover_images = []
