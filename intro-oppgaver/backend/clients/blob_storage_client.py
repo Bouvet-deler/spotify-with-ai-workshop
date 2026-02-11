@@ -1,5 +1,6 @@
 import os
 import uuid
+import base64
 from io import BytesIO
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import requests
@@ -23,10 +24,10 @@ class BlobStorageClient:
 
     def upload_image_from_url(self, image_url: str, user_id: str, playlist_id: str) -> str:
         """
-        Downloads an image from a URL and uploads it to Azure Blob Storage
+        Downloads an image from a URL (or decodes base64) and uploads it to Azure Blob Storage
         
         Args:
-            image_url: The URL of the image to download
+            image_url: The URL of the image or base64 data URL (data:image/png;base64,...)
             user_id: User ID for organizing blobs
             playlist_id: Playlist ID for unique identification
             
@@ -34,12 +35,18 @@ class BlobStorageClient:
             The public URL of the uploaded blob
         """
         try:
-            # Download the image from the URL
-            print(f"Downloading image from: {image_url}")
-            response = requests.get(image_url, timeout=30)
-            response.raise_for_status()
-            
-            image_data = BytesIO(response.content)
+            # Check if it's a base64 data URL
+            if image_url.startswith('data:image'):
+                # Extract base64 data after the comma
+                base64_data = image_url.split(',', 1)[1]
+                # Decode base64 to bytes
+                image_bytes = base64.b64decode(base64_data)
+                image_data = BytesIO(image_bytes)
+            else:
+                # Download the image from the URL
+                response = requests.get(image_url, timeout=30)
+                response.raise_for_status()
+                image_data = BytesIO(response.content)
             
             # Create a unique blob name
             blob_name = f"covers/{user_id}/{playlist_id}.png"
