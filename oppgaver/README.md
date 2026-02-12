@@ -252,3 +252,16 @@ _Når vi har sangene fra spillelisten, skal vi generere en beskrivelse ved hjelp
 
 Når du har fullført oppgaven, skal du kunne generere en AI-basert tekstbeskrivelse av spillelisten.
 
+### 2.7 Lagre Beskrivelse til Table Storage 💾
+
+_Etter at vi har generert en beskrivelse, skal vi lagre den permanent i Azure Table Storage for senere bruk._
+
+**Oppgave**
+
+1. Naviger til `services/routes.py` i backend, og finn `generate_description_for_playlist`-metoden.
+
+2. Finn kommentaren `# TODO: 2.7 Lagre den genererte beskrivelsen i table storage...`
+   - Kall `table_storage.save_description_record()` med de relevante parameterne
+
+Når du har fullført oppgaven, skal alle genererte beskrivelser bli lagret permanent i Azure Table Storage.
+
