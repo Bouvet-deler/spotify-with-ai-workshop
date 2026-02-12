@@ -21,9 +21,8 @@ export const GeneratorPage = () => {
     const fetchTracks = async () => {
       try {
         setLoading(true);
-        // TODO: 1.4.3 Fetch tracks for the selected playlist from the backend and update state
-        const response = "TODO"
-
+        const response = await axios.get(`/api/get-tracks?playlist_id=${playlistId}`);
+        setTracks(response.data);
         setError(null);
       } catch (err) {
         console.error("Error fetching tracks:", err);
@@ -100,7 +99,7 @@ export const GeneratorPage = () => {
         {tracks.length > 10 && <p>...and {tracks.length - 10} more tracks</p>}
       </div>
 
-      {/* TODO: 1.4.1 & 1.4.2 Add button with onClick handler  */}
+      {/* TODO: 1.4 */}
 
 
       <button

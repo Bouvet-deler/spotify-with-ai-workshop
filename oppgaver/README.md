@@ -16,11 +16,11 @@ _Slik gjør du:_
 cd oppgaver/backend
 ```
 
-2. Opprett en `.env`-fil i rooten på backend-prosjektet.
+1. Opprett en `.env`-fil i rooten på backend-prosjektet.
 
-3. Klikk på lenken under og kopier alt.
+2. Klikk på lenken under og kopier alt.
    - TODO
-4. Lim inn i `.env`-filen
+3. Lim inn i `.env`-filen
 
 ### 3. Kjør prosjektet
 
@@ -37,12 +37,12 @@ Følg disse trinnene for å sette opp og kjøre backend:
    ```
 2. **Opprett et virtuelt miljø**
    ```bash
-   python3 -m venv .venv
+   python3 -m venv .spotify-env
    ```
 3. **Aktiver et virtuelt miljø**
    ```bash
-   (Mac/linux) source .venv/bin/activate
-   (Windows) .venv\Scripts\activate
+   (Mac/linux) source .spotify-env/bin/activate
+   (Windows) .spotify-env\Scripts\activate
    ```
 4. **Installer nødvendige Python-pakker**
    ```bash
@@ -81,13 +81,12 @@ Følg disse trinnene for å sette opp og kjøre frontend:
 ## Oppgave 1 – Spotify API 🔍
 
 _I oppgave 1 skal vi benytte oss av Spotify sitt API for å hente spillelistene dine fra Spotify. Deretter skal vi benytte oss av Azure sin modell for generering av et spilleliste-cover basert på sangene i spillelisten din._
-_ For å få til dette skal vi sette opp .env-fil, backend-route, og koble dette til frontend._
+_For å få til dette skal vi sette opp .env-fil, backend-route, og koble dette til frontend._
 
 ---
 ### 1.0 Legg til riktig token fra Spotify
 
 _For å få tilgang til dine Spotify-spillelister, trenger vi riktig token._
-
 
 **Oppgave**
 
@@ -107,8 +106,9 @@ I .env filen:
 SPOTIFY_ACCESS_TOKEN='eksempel_token123'
 ```
 
+I tillegg:
+I routes.py finnes det flere metoder som via fetch_web_app kaller på Spotify sine Rest endepunkt. I metoden get_playlist_tracks mangler vi å spesifisere metoden for rest kallet. Sjekk ut dokumentasjonen til Spotify, og legg til rett metode.
 
-_OBS: Token varer kun én time, når du går ut vil du få en feilmelding. Når dette skjer må du laste laste inn siden på nytt, og oppdatere .env filen med den nye token._ 
 
 ### 1.1 Opprett en route i Frontend for å vise hjemsiden
 
@@ -137,81 +137,119 @@ _Hint: Link-komponenten bruker `to`-attributtet for å spesifisere hvor den skal
 
 Når oppgaven er fullført, skal man kunne trykke inn på hver spilleliste, og få listet opp sanger i spillelisten. 
 
+### 1.3 Endre bakgrunnsfarge
 
-### 1.3 Backend-route for å sende spilleliste til bilde genereringsmodellen.
-
-_Når en `GET`-forespørsel sendes til `/generate-cover`, skal spillelisten som blir sendt med forespårslen behandlet av Azure modellen for å genere et coverbilde basert på sangtitlene. Forespørslen skal inneholde en spilleliste id og en bruker id, og endepunktet skal returnere bildet som er generert. 
-
-**Oppgave**
-
-1. Naviger til services/routes.py i backend
-2. Oppdater endepunktet i routes.py for å motta bildet:
-   - Metode: `GET`-forespørsel
-   - URL:`/generate-cover`
-3. Finn ut hvilket klasse og metode som små brukes for å kalle Azure modellen
-4. Returner 
-5. Erstatt `return "todo", 200` med en JSON-respons som returnerer `blob_image_url`
-
-   _Tips: Du kan finne lignende struktur i en annen methode i filen._
+1. Naviger til ` cd styles/index.css `
+2. Bakgrunnen er nå hvit – bytt den til din favorittfarge!
 
 
+### 1.4 Lag en knapp for å generere coverbilde
 
-Når oppgaven er fullført, skal det være mulig å kjøre kommandoen `flask run` i backend-terminalen uten at det gir feilmelding. Husk å kjøre kommandoen i `cd oppgaver/backend`
-
-### 1.4 Legg til knapp for generering av spillelistecover
-
-_I denne oppgaven skal du gj.  Komponenten er designet for at brukeren skal kunne se det genererte bildet som er laget av modellen._
+_På GeneratorPage-siden vises alle sangene i spillelisten. Nå skal vi legge til en knapp som lar brukeren generere et AI-basert coverbilde for spillelisten._
 
 **Oppgave**
 
-1. ** Oprett genererings knapp**:
-   - Oprett en knapp med onClick og tekst "Generate AI Cover Image"
-   - OnClick eventet skal vise til generateCover
-   - Tilordne den CSS-klassen className={styles.generateButton}.
+1. Naviger til `pages/GeneratorPage/GeneratorPage.tsx`
+2. Finn kommentaren `{/* TODO: 1.4 */}` 
+3. Erstatt kommentaren med en `<button>` som har følgende:
+   - `onClick` skal kalle funksjonen `generateCover`
+   - `disabled` skal være `true` når `generating` er `true` eller `tracks.length === 0`
+   - `className` skal være `{styles.generateButton}`
+   - Knappeteksten skal vise "Generating..." når `generating` er `true`, ellers "Generate AI Cover Image"
 
-2. **Variere tekst for å se om bildet holder på å genereres**
-   - For å variere tekst som vises på knappen kan vi benytte oss av 'Conditional Rendering', ved hjelp av useState 'generating' i filen. 
-   - Gjør dette for knappen med teksten "Generate AI Cover Image" og "Generating..."
-   - For eksempel:
+_Hint: Bruk en ternary operator (betingelse ? true : false) for å vise forskjellig tekst basert på `generating`-tilstanden._
 
-```javascript
-const [example, setExample] = useState(false);
+_Hint2: Du kan se et lignende eksempel ved den andre knappen som genererer en beskrivelse av spillelisten. _
 
-{example ? "Example is true" : "Example is false"}
-```
+OBS: Denne knappen fungerer først fullføringen av neste oppgave.
 
-3. **Lag et API kall**
-   - Oppdater responsen med et kall vd bruk av 'await.axios.get', hvor vi skal kalle på "api/get-tracks", og hvor vi sender inn playlist_id som argument. 
-   - Oppdater setTracks state med responsen sin data. 
+## Oppgave 2 – INNHOLDSGENERERING  🧠
 
-
-Når alt fungerer, skal du kunne genere et bilde ved hjelp av knappen. 
-
-## Oppgave 2 – Last opp bilder til bildebibliotek
-
-For å se alle bildene vi har laget ved hjelp av modellen vår, vil vi lagre de i Azure Blob Storage, og vise dem frem i et bibliotek. Vi trenger derfor å først laste bildet opp til Azure Blob Storage, og deretter vise bildene frem ved å laste de ned fra Azure Blob Storage. 
+_I oppgave 2 skal bildet genereres basert på sangene i spillelisten._
 
 ---
 
+
+### 2.1 BILDEGENERERING 🖼️ 
+
+Klassen `CoverImageGeneratorClient` er laget for å samhandle med OpenAI’s DALL-E 3-modell gjennom Azure OpenAI-tjenester, og brukes til å generere bilder basert på tekstbeskrivelser (kalt "prompt").
+
 **Oppgave**
-1. Naviger til BlobStorageClient.
-2. Oppdater blob_client ved å bruke blob_service_client og metoden get_blob_client. 
-   - Tips: Husk å ha med containernavn og blob navn.
-   - Tips2: https://learn.microsoft.com/en-us/python/api/azure-storage-blob/azure.storage.blob.blobserviceclient?view=azure-python#azure-storage-blob-blobserviceclient-get-blob-client
-3. Last opp bildet til blob_client ved å bruke upload_blob. 
-   - Husk å sende med bildedata, content_settings, og blob_type="BlockBlob". 
-4. Det er url'en til bildet som brukes i routern, sett url'en. 
 
-## Oppgave 3 - Vis frem bildene
-1. Naviger til BlobStorageClient.
-2. Oppdater blob_list ved hjelp av container_client og list_blobs
-3. Oppdater blob_client ved å bruke blob_service_client og metoden get_blob_client. 
-4. Vi trenger id, playlistId, imageUrl, createdAt, ved å benytte seg av playlist_id eller hjelp av blob_client. 
-   
-Biblioteket skal nå fungere 🎉
+1. Naviger til `cover_image_generator_client.py` i backend.
+
+2. Fullfør payload med de nødvendige parameterne:
+   - `model`: skal være **"gpt-image-1"** (hentet fra .env)
+   - `prompt`: skal inneholde prompt-teksten som blir sendt inn
+
+3. Fullfør API-kallet:
+   - `url`: skal peke til `self.endpoint`
+   - `json`: skal inneholde `payload`
+4. 
+
+Når du har fullført oppgaven, skal det være mulig å klikke på knappen fra forrige oppgave og generere et AI-coverbilde basert på sangene i spillelisten.
+
+### 2.2 TEKSTGENERERING 💬
+
+Klassen `PlaylistDescriptionGeneratorClient` bruker OpenAI sin GPT-5-modell via Azure for å generere tekst basert på en prompt.
+**Oppgave**
+
+1. Naviger til `PlaylistDescriptionGeneratorClient` i backend.
+
+2. Sett modellen til **"gpt-5"** (hentet fra .env `AZURE_OPENAI_CHAT_ENDPOINT`).
 
 
-## Oppgave 4 - Forbedre prompten
-En godt formulert prompt er avgjørende for å generere relevante og presise resultater.
+### 2.3 Forbedre Prompten 💡
 
-1. Gå gjennom eksisterende tekst i prompten i playlist_generator.py.
+_En godt formulert prompt er avgjørende for å generere relevante og presise resultater._
+
+#### Oppgave
+
+1. Gå gjennom eksisterende tekst i prompten i `playlist_generator.py`.
+
+2. Sørg for at prompten er klar, spesifikk og inkluderer all nødvendig kontekst for å generere en oppskrift av høy
+   kvalitet.
+
+### 2.4 Lagre Coverbilde til Blob Storage ☁️
+
+_Når vi har generert et coverbilde med DALL-E 3, må vi lagre det i Azure Blob Storage for permanent lagring._
+
+**Oppgave**
+
+1. Naviger til `clients/blob_storage_client.py` i backend.
+
+2. I metoden `upload_image_from_url`, finn kommentaren `# TODO: 2.4 Lag et unikt navn for blobben...`
+   - Lag et unikt navn som følger mønsteret `covers/{user_id}/{playlist_id}.png`
+   - Husk å bruke variablene `user_id` og `playlist_id` som blir sendt inn
+
+3. Fullfør også kallet til `upload_image_from_url` i `routes.py` (linje 60) ved å kalle `get_playlist_tracks(playlist_id)` for å hente sangene fra spillelisten.
+
+Når du har fullført oppgaven, skal coverimagene bli lagret permanent i Azure Blob Storage.
+
+### 2.5 Liste Cover Images 📸
+
+_Vi må kunne hente alle lagrede coverimagene for en bruker fra Blob Storage._
+
+**Oppgave**
+
+1. Naviger til `clients/blob_storage_client.py` i backend.
+
+2. I metoden `list_user_covers`, finn kommentaren `# TODO: 2.5 Hent ut alle blobs...`
+   - Bruk `self.container_client.list_blobs(name_starts_with=prefix)` for å hente alle blobs som starter med brukerens prefix
+   - Tilordne resultatet til `blob_list`
+
+Når du har fullført oppgaven, skal du kunne se alle genererte coverimagene for en bruker på `CoverImageListPage`.
+
+### 2.6 TEKSTGENERERING FOR BESKRIVELSE 💬
+
+_Når vi har sangene fra spillelisten, skal vi generere en beskrivelse ved hjelp av GPT._
+
+**Oppgave**
+
+1. Naviger til `services/routes.py` i backend, og finn `generate_description_for_playlist`-metoden.
+
+2. Finn kommentaren `# TODO: 2.6 Kall metoden for å generere beskrivelse...`
+   - Kall `description_generator.generate_description(track_names)` og tilordne resultatet til `description`-variabelen
+
+Når du har fullført oppgaven, skal du kunne generere en AI-basert tekstbeskrivelse av spillelisten.
+

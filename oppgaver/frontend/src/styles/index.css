@@ -9,7 +9,8 @@
 
   color-scheme: light;
   color: #060325;
-  background-color: #FAEBCE;
+  /* TODO: 1.3 */
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

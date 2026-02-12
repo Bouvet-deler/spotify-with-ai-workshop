@@ -5,22 +5,26 @@ import os
 
 class PlaylistDescriptionGeneratorClient:
     def __init__(self):
+        base_url = os.getenv("AZURE_OPENAI_BASE_URL")
         self.client = AzureOpenAI(
-
-            api_version="2024-12-01-preview",
-            azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+            api_version="2025-01-01-preview",
+            azure_endpoint=base_url,
             api_key=os.getenv("AZURE_OPENAI_API_KEY"),
         )
 
     def generate_description(self, prompt: str) -> str:
-
         try:
-            response = self.client.chat.completions.create(
-                model="gpt-5-mini",  # TODO: oppgave 2.2.2 Sett riktig modell her
+                response = self.client.chat.completions.create(
+                model="TODO",  # TODO: 2.2 Bruk "gpt-5" modellen 
                 messages=[{"role": "user", "content": prompt}],
-                max_completion_tokens=1000,
+                max_completion_tokens=10000,
             )
-            description = response.choices[0].message.content.strip()
+
+            content = response.choices[0].message.content
+            if content is None:
+                print("DEBUG: Content is None")
+                return None
+            description = content.strip()
             return description
 
         except openai.APIConnectionError as e:

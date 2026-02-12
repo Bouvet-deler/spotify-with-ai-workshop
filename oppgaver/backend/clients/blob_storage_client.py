@@ -1,5 +1,6 @@
 import os
 import uuid
+import base64
 from io import BytesIO
 from azure.storage.blob import BlobServiceClient, ContentSettings
 import requests
@@ -23,10 +24,10 @@ class BlobStorageClient:
 
     def upload_image_from_url(self, image_url: str, user_id: str, playlist_id: str) -> str:
         """
-        Downloads an image from a URL and uploads it to Azure Blob Storage
+        Downloads an image from a URL (or decodes base64) and uploads it to Azure Blob Storage
         
         Args:
-            image_url: The URL of the image to download
+            image_url: The URL of the image or base64 data URL (data:image/png;base64,...)
             user_id: User ID for organizing blobs
             playlist_id: Playlist ID for unique identification
             
@@ -34,38 +35,50 @@ class BlobStorageClient:
             The public URL of the uploaded blob
         """
         try:
-            # Download the image from the URL
-            print(f"Downloading image from: {image_url}")
-            response = requests.get(image_url, timeout=30)
-            response.raise_for_status()
+            # Check if it's a base64 data URL
+            if image_url.startswith('data:image'):
+                # Extract base64 data after the comma
+                base64_data = image_url.split(',', 1)[1]
+                # Decode base64 to bytes
+                image_bytes = base64.b64decode(base64_data)
+                image_data = BytesIO(image_bytes)
+            else:
+                # Download the image from the URL
+                response = requests.get(image_url, timeout=30)
+                response.raise_for_status()
+                image_data = BytesIO(response.content)
             
-            image_data = BytesIO(response.content)
+            # TODO: 2.4 Lag et unikt navn for blobben som skal lagres i Azure Blob Storage
+            # pattern: "covers/{user_id}/{playlist_id}.png"
             
-            # Create a unique blob name
-            blob_name = f"covers/{user_id}/{playlist_id}.png"
+            blob_name = f""
             
             # Upload to blob storage
-
-            # TODO: 2.1 - Get the blob client 
-            blob_client = "TODO"
+            blob_client = self.blob_service_client.get_blob_client(
+                container=self.container_name,
+                blob=blob_name
+            )
             
             # Set content type for proper image display
             content_settings = ContentSettings(content_type='image/png')
             
             print(f"Uploading image to blob storage: {blob_name}")
-
-            # TODO: 2.2 - Upload the image data to blob storage
-            blob_client.TODO
+            blob_client.upload_blob(
+                image_data,
+                overwrite=True,
+                content_settings=content_settings,
+                blob_type="BlockBlob"
+            )
             
-            # TODO: 2.3 Return the public URL
-            blob_url = TODO
+            # Return the public URL
+            blob_url = blob_client.url
             print(f"Successfully uploaded image to: {blob_url}")
             
             # Verify the blob is accessible
             print(f"Blob properties: container={self.container_name}, blob={blob_name}")
             
             return blob_url
-            
+
         except requests.RequestException as e:
             print(f"ERROR downloading image: {str(e)}")
             raise Exception(f"Failed to download image from URL: {str(e)}")
@@ -85,22 +98,23 @@ class BlobStorageClient:
         """
         try:
             prefix = f"covers/{user_id}/"
-            # TODO : 3.2 - List blobs with the specified prefix to get all covers for the user
-            blob_list = TODO
+            # TODO: 2.5 Hent ut alle blobs for denne brukeren ved å bruke list_blobs med name_starts_with=prefix
+            blob_list = []  # Placeholder, erstatt med faktisk kall til list_blobs
             
             cover_images = []
             for blob in blob_list:
                 # Extract playlist_id from blob name (covers/user_id/playlist_id.png)
                 playlist_id = blob.name.split('/')[-1].replace('.png', '')
-                # TODO : 3.3 - Get the blob client for the current blob to access its URL and properties
-                blob_client = TODO
+                blob_client = self.blob_service_client.get_blob_client(
+                    container=self.container_name,
+                    blob=blob.name
+                )
                 
-                # TODO : 3.4 Fyll inn 
                 cover_images.append({
-                    "id": TODO,
-                    "playlistId": TODO,
-                    "imageUrl": TODO,
-                    "createdAt": TODO if blob.creation_time else None
+                    "id": playlist_id,
+                    "playlistId": playlist_id,
+                    "imageUrl": blob_client.url,
+                    "createdAt": blob.creation_time.isoformat() if blob.creation_time else None
                 })
             
             print(f"Found {len(cover_images)} covers for user {user_id}")
