@@ -10,17 +10,17 @@ _Slik gjør du:_
 
 1. **Naviger til Backend-mappen**
 
-Åpne en terminal og naviger til intro-oppgaver-mappen, deretter backend-mappen:
+Åpne en terminal og naviger til oppgaver-mappen, deretter backend-mappen:
 
 ```bash
-cd intro-oppgaver/backend
+cd oppgaver/backend
 ```
 
-2. Opprett en `.env`-fil i rooten på backend-prosjektet.
+1. Opprett en `.env`-fil i rooten på backend-prosjektet.
 
-3. Klikk på lenken under og kopier alt.
+2. Klikk på lenken under og kopier alt.
    - TODO
-4. Lim inn i `.env`-filen
+3. Lim inn i `.env`-filen
 
 ### 3. Kjør prosjektet
 
@@ -31,9 +31,9 @@ For å kjøre prosjektet anbefales det å bruke to separate terminaler: én for 
 Følg disse trinnene for å sette opp og kjøre backend:
 
 1. **Naviger til Backend-mappen**  
-   Åpne en terminal og naviger til intro-oppgaver-mappen, deretter backend-mappen:
+   Åpne en terminal og naviger til oppgaver-mappen, deretter backend-mappen:
    ```bash
-   cd intro-oppgaver/backend
+   cd oppgaver/backend
    ```
 2. **Opprett et virtuelt miljø**
    ```bash
@@ -65,7 +65,7 @@ Følg disse trinnene for å sette opp og kjøre frontend:
   Åpne en terminal og naviger til `frontend`-mappen:
 
    ```bash
-   cd intro-oppgaver/frontend
+   cd oppgaver/frontend
 
    ```
 
@@ -81,7 +81,7 @@ Følg disse trinnene for å sette opp og kjøre frontend:
 ## Oppgave 1 – Spotify API 🔍
 
 _I oppgave 1 skal vi benytte oss av Spotify sitt API for å hente spillelistene dine fra Spotify. Deretter skal vi benytte oss av Azure sin modell for generering av et spilleliste-cover basert på sangene i spillelisten din._
-_ For å få til dette skal vi sette opp .env-fil, backend-route, og koble dette til frontend._
+_For å få til dette skal vi sette opp .env-fil, backend-route, og koble dette til frontend._
 
 ---
 ### 1.0 Legg til riktig token fra Spotify
