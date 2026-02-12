@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 import os
 import tempfile
 import requests
+from clients.table_storage_client import TableStorageClient
 from playlist_generator import CoverGenerator, DescriptionGenerator
 
 from clients.blob_storage_client import BlobStorageClient
@@ -11,6 +12,8 @@ routes = Blueprint('routes', __name__)
 cover_generator = CoverGenerator()
 description_generator = DescriptionGenerator()
 blob_storage = BlobStorageClient()
+table_storage = TableStorageClient()
+
 
 
 @routes.route('/test', methods=['GET'])
@@ -62,12 +65,17 @@ def generate_cover_image_for_playlist():
         track_names = [item['track']['name'] for item in tracks]
         
         # Use the CoverGenerator to create the cover image (returns temporary DALL-E URL)
-        dalle_image_url = cover_generator.generate_cover_image(track_names)
+        ai_cover_image = cover_generator.generate_cover_image(track_names)
         
-        if dalle_image_url:
+        if ai_cover_image:
             # Upload the image to blob storage and get permanent URL
-            blob_image_url = blob_storage.upload_image_from_url(dalle_image_url, user_id, playlist_id)
-            return jsonify({"image_url": blob_image_url}), 200
+            try:
+                blob_image_url = blob_storage.upload_image_from_url(ai_cover_image, user_id, playlist_id)
+                return jsonify({"image_url": blob_image_url}), 200
+
+            except Exception as e:                
+                print(f"ERROR uploading image to blob storage: {str(e)}")
+            return jsonify({"image_url": ai_cover_image}), 200
         else:
             return jsonify({"error": "Failed to generate cover image"}), 500
     except Exception as e:
@@ -93,6 +101,21 @@ def generate_description_for_playlist():
         description = ""  # Placeholder, erstatt med faktisk kall til description_generator
         
         if description:
+                        # Get playlist name for table storage record
+            try:
+                playlists = get_playlists()
+                playlist_name = next((p['name'] for p in playlists if p['id'] == playlist_id), 'Unknown Playlist')
+            except Exception as e:
+                print(f"WARNING: Could not fetch playlist name: {str(e)}")
+                playlist_name = 'Unknown Playlist'
+            
+            # Save description record to table storage
+            try:
+                table_storage.save_description_record(playlist_id, playlist_name, description)
+            except Exception as e:
+                print(f"WARNING: Could not save to table storage: {str(e)}")
+                # Don't fail the request if table storage fails
+            
             return jsonify({"description": description}), 200
         else:
             return jsonify({"error": "Failed to generate description"}), 500

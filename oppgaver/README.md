@@ -178,8 +178,8 @@ og brukes til å generere bilder basert på tekstbeskrivelser (kalt "prompt").
 1. Naviger til `/clients/cover_image_generator_client.py` i backend.
 
 2. Fullfør payload med de nødvendige parameterne:
-   - `model`: skal være **"gpt-image-1"** (hentet fra .env)
    - `prompt`: skal inneholde prompt-teksten som blir sendt inn
+   - `model`: modellen vi skal bruke finner du i .env
 
 3. Fullfør API-kallet:
    - `url`: skal peke til `self.endpoint`
