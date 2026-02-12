@@ -21,6 +21,3 @@ Ved slutten av workshoppen vil du ha en fullverdig applikasjon som demonstrerer 
 ## 📚 Oppgavene
 
 Oppgavene er merket med **TODO**, og befinner seg i frontend, backend og .env filer. Det finnes også et løsningsforslag i ./lf mappen hvis du trenger hjelp eller inspirasjon. 
-
-## Connection Strings
-https://secret-service.bouvet.no/#/s/a6a2c9ce-901e-43d3-ace1-23c423f2b791/BALkP4Q9fgvrY4B8iEKq70
