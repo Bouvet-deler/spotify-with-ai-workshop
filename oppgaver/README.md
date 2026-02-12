@@ -94,6 +94,7 @@ _For å få tilgang til dine Spotify-spillelister, trenger vi riktig token._
 2. Logg inn og scroll ned til **Code**
 3. Kopier token fra kodeeksemplet – dette er din token for å få tilgang til Spotify API'et
 4. Naviger til `.env`-filen og lim inn token fra Spotify for `SPOTIFY_ACCESS_TOKEN`
+5. I routes.py finnes det flere metoder som via fetch_web_app kaller på Spotify sine Rest endepunkter. I metoden get_playlist_tracks mangler vi å spesifisere metoden for rest kallet. Sjekk ut dokumentasjonen til Spotify, og legg til rett metode.
 
 **Eksempel:**
 
@@ -105,9 +106,6 @@ I .env filen:
 ```
 SPOTIFY_ACCESS_TOKEN='eksempel_token123'
 ```
-
-I tillegg:
-I routes.py finnes det flere metoder som via fetch_web_app kaller på Spotify sine Rest endepunkt. I metoden get_playlist_tracks mangler vi å spesifisere metoden for rest kallet. Sjekk ut dokumentasjonen til Spotify, og legg til rett metode.
 
 
 ### 1.1 Opprett en route i Frontend for å vise hjemsiden
@@ -172,11 +170,12 @@ _I oppgave 2 skal bildet genereres basert på sangene i spillelisten._
 
 ### 2.1 BILDEGENERERING 🖼️ 
 
-Klassen `CoverImageGeneratorClient` er laget for å samhandle med OpenAI’s DALL-E 3-modell gjennom Azure OpenAI-tjenester, og brukes til å generere bilder basert på tekstbeskrivelser (kalt "prompt").
+Klassen `CoverImageGeneratorClient` er laget for å samhandle med OpenAI’s gpt-image-1 gjennom Azure AI Foundry, 
+og brukes til å generere bilder basert på tekstbeskrivelser (kalt "prompt").
 
 **Oppgave**
 
-1. Naviger til `cover_image_generator_client.py` i backend.
+1. Naviger til `/clients/cover_image_generator_client.py` i backend.
 
 2. Fullfør payload med de nødvendige parameterne:
    - `model`: skal være **"gpt-image-1"** (hentet fra .env)
