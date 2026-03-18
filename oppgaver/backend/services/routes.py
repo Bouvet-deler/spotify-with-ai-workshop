@@ -225,18 +225,21 @@ def set_cover_image_for_playlist():
         img_response = requests.get(ai_cover_image, timeout=30)
         img_response.raise_for_status()
 
-        # Convert to JPEG and compress until under 256 KB (Spotify limit)
+        # Convert to JPEG and compress until base64-encoded size is under 256 KB (Spotify limit)
+        # Base64 adds ~33% overhead, so raw JPEG must stay under 192 KB
         image = Image.open(BytesIO(img_response.content)).convert('RGB')
         quality = 85
         buffer = BytesIO()
         while quality >= 10:
             buffer = BytesIO()
             image.save(buffer, format='JPEG', quality=quality)
-            if buffer.tell() <= 256 * 1024:
+            if buffer.tell() <= 192 * 1024:
                 break
             quality -= 10
 
-        # PUT to Spotify API — body is raw JPEG bytes with Content-Type: image/jpeg
+        jpeg_b64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+        # PUT to Spotify API — body must be base64-encoded JPEG string
         token = spotify_token.get_token()
         res = requests.put(
             f'https://api.spotify.com/v1/playlists/{playlist_id}/images',
@@ -244,7 +247,7 @@ def set_cover_image_for_playlist():
                 'Authorization': f'Bearer {token}',
                 'Content-Type': 'image/jpeg'
             },
-            data=buffer.getvalue(),
+            data=jpeg_b64,
             timeout=30
         )
 
@@ -257,6 +260,7 @@ def set_cover_image_for_playlist():
     except Exception as e:
         print(f"ERROR in set_cover_image_for_playlist: {str(e)}")
         return jsonify({"error": f"Failed to set cover image: {str(e)}"}), 500
+
 
 @routes.route('/cover-images', methods=['GET'])
 def get_cover_images():
