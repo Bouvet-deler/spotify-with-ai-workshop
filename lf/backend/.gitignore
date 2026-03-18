@@ -2,6 +2,9 @@
 .vscode/
 .idea/
 
+# Spotify OAuth token (contains sensitive refresh token, never commit)
+clients/.spotify_refresh_token
+
 # Vagrant
 .vagrant/
 

@@ -1,20 +1,21 @@
 ## 🚀 Kom i gang
 
-### 1. Klon repoet
+### 1. Fork repoet (Valgfritt)
 
-### 2. Sett opp miljøvariabler
+Se etter 'Fork' på https://github.com/Bouvet-deler/spotify-with-ai-workshop og trykk. Velg Create new Fork, og sett deg selv som eier. 
+Når du har gjort dette har du en kopi av repositoriet på din egen github bruker som du kan commite til.
+
+### 2. Klon repoet
+
+I en terminal, naviger til mappen du vil at koden skal lagres. Du navigerer ved å bruke 'cd' etterfulgt av stien du vil navigere til. Når du er i ønsket plassering kan du i samme terminal kjøre 'git clone https://github.com/Bouvet-deler/spotify-with-ai-workshop.git'. Når kommandoen har kjørt vellykket kan du åpne repoet i ønsket IDE.
+
+### 3. Sett opp miljøvariabler
 
 For å kunne bruke Azure-tjenestene må vi legge til API-nøkler og endepunkter i en `.env`-fil. Dette bidrar til å holde sensitiv informasjon sikker.
 
 _Slik gjør du:_
 
 1. **Naviger til Backend-mappen**
-
-Åpne en terminal og naviger til oppgaver-mappen, deretter backend-mappen:
-
-```bash
-cd oppgaver/backend
-```
 
 1. Opprett en `.env`-fil i rooten på backend-prosjektet.
 
@@ -73,6 +74,7 @@ Følg disse trinnene for å sette opp og kjøre frontend:
    ```bash
    npm install
    ```
+   
 3. Run dev server
    ```bash
    npm run dev

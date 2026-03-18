@@ -4,7 +4,7 @@ export interface Playlist {
 }
 
 export interface Track {
-  track: {
+  item: {
     name: string;
     artists: { name: string }[];
   };

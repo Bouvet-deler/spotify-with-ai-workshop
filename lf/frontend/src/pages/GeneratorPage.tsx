@@ -15,6 +15,8 @@ export const GeneratorPage = () => {
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [generatingDescription, setGeneratingDescription] = useState(false);
+  const [settingCover, setSettingCover] = useState(false);
+  const [coverSet, setCoverSet] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -48,6 +50,24 @@ export const GeneratorPage = () => {
       setError("Failed to generate cover. Please try again.");
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const setCoverOnSpotify = async () => {
+    if (!coverUrl) return;
+    try {
+      setSettingCover(true);
+      setError(null);
+      await axios.put(
+        `/api/set-cover?playlist_id=${playlistId}&userId=${userId}`,
+        { image_url: coverUrl }
+      );
+      setCoverSet(true);
+    } catch (err) {
+      console.error("Error setting cover:", err);
+      setError("Failed to set cover on Spotify. Please try again.");
+    } finally {
+      setSettingCover(false);
     }
   };
 
@@ -93,8 +113,8 @@ export const GeneratorPage = () => {
         <ul className={styles.trackList}>
           {tracks.slice(0, 10).map((item, index) => (
             <li key={index}>
-              <strong>{item.track.name}</strong> by{" "}
-              {item.track.artists.map((a) => a.name).join(", ")}
+              <strong>{item.item.name}</strong> by{" "}
+              {item.item.artists.map((a) => a.name).join(", ")}
             </li>
           ))}
         </ul>
@@ -139,6 +159,13 @@ export const GeneratorPage = () => {
         <div className={styles.coverSection}>
           <h2>Generated Cover</h2>
           <img src={coverUrl} alt="Generated playlist cover" className={styles.coverImage} />
+          <button
+            onClick={setCoverOnSpotify}
+            disabled={settingCover || coverSet}
+            className={styles.generateButton}
+          >
+            {settingCover ? "Setting..." : coverSet ? "Cover Set on Spotify ✓" : "Set as Spotify Cover"}
+          </button>
         </div>
       )}
       

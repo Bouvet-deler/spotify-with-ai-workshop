@@ -21,6 +21,17 @@ class BlobStorageClient:
             print(f"Container not found, creating container: {self.container_name}")
             from azure.storage.blob import PublicAccess
             self.container_client.create_container(public_access=PublicAccess.Blob)
+    
+    def download_image(self, blob_url: str) -> BytesIO:
+        """
+        Downloads an image from Azure Blob Storage given its URL
+        
+        Args:
+            blob_url: The public URL of the blob
+        Returns:
+        """
+        self.container_client
+        return
 
     def upload_image_from_url(self, image_url: str, user_id: str, playlist_id: str) -> str:
         """
