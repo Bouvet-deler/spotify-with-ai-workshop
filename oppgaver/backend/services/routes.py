@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, redirect
 import os
 import base64
 import secrets
@@ -6,7 +6,6 @@ import tempfile
 import requests
 from PIL import Image
 from clients.table_storage_client import TableStorageClient
-from lf.backend.services.routes import fetch_web_api
 from playlist_generator import CoverGenerator, DescriptionGenerator
 
 from clients.blob_storage_client import BlobStorageClient
@@ -21,7 +20,7 @@ table_storage = TableStorageClient()
 spotify_token = SpotifyTokenClient()
 
 REDIRECT_URI = "http://127.0.0.1:5000/callback"
-SCOPES = "playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private ugc-image-upload user-read-private"
+SCOPES = "playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private ugc-image-upload user-read-private user-top-read"
 _state_store: set = set()
 
 
@@ -262,6 +261,7 @@ def set_cover_image_for_playlist():
         return jsonify({"error": f"Failed to set cover image: {str(e)}"}), 500
 
 
+
 @routes.route('/cover-images', methods=['GET'])
 def get_cover_images():
     user_id = request.args.get('userId')
@@ -293,6 +293,26 @@ def get_cover_images():
         return jsonify({"error": "An error occurred while processing your request."}), 500
 
 
+@routes.route('/top-artists', methods=['GET'])
+def top_artists():
+    try:
+        artists = get_top_artists()
+        return jsonify(artists), 200
+    except Exception as e:
+        print(f"ERROR in top_artists: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@routes.route('/top-tracks', methods=['GET'])
+def top_tracks():
+    try:
+        tracks = get_top_tracks()
+        return jsonify(tracks), 200
+    except Exception as e:
+        print(f"ERROR in top_tracks: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 def fetch_spotify_web_api(endpoint, method, body=None):
     """Fetch from Spotify Web API
     Args:
@@ -310,7 +330,6 @@ def fetch_spotify_web_api(endpoint, method, body=None):
     # Vi bruker requests biblioteket for å sende en HTTP request til Spotify Web API. 
     # en gyldig request består av riktig HTTP-metode (GET, POST, etc.), riktig endpoint URL, og nødvendige access token i headeren for autentisering.
     # Hvis det er en POST eller PUT request, må vi også sende med body som JSON.
-    #
     res = requests.request(
         "", #TODO: Fyll inn riktig HTTP-metode
         f'https://api.spotify.com/{""}', #TODO: f-strengen mangler endpoint
@@ -344,6 +363,18 @@ def get_genre_seeds():
         'v1/recommendations/available-genre-seeds',
         'GET'
     )['genres']
+
+def get_top_artists():
+    """Get user's top artists"""
+    result = fetch_spotify_web_api('v1/me/top/artists', 'GET')
+    print("Top artists response:", result)
+    return result['items']
+
+def get_top_tracks():
+    """Get user's top tracks"""
+    result = fetch_spotify_web_api('v1/me/top/tracks', 'GET')
+    print("Top tracks response:", result)
+    return result['items']
 
 def get_playlist_tracks(playlist_id):
     """Get tracks in a playlist

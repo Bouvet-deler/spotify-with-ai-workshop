@@ -2,8 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./styles/App.css";
+import { PlaylistsPage } from "./pages/PlaylistsPage";
 import { GeneratorPage } from "./pages/GeneratorPage";
 import { CoverImageListPage } from "./pages/CoverImageListPage";
+import { TopPage } from "./pages/TopPage";
 import { Navbar } from "./components/Navbar/Navbar";
 import { Spinner } from "./components/Spinner/Spinner";
 
@@ -46,6 +48,7 @@ function App() {
             {/* TODO 1.1: Add route for PlaylistPage*/}
             <Route path="/cover/:playlistId" element={<GeneratorPage />} />
             <Route path="/gallery" element={<CoverImageListPage />} />
+            <Route path="/top" element={<TopPage />} />
           </Routes>
         </div>
       </Router>

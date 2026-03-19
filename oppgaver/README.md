@@ -88,26 +88,16 @@ _For å få til dette skal vi sette opp .env-fil, backend-route, og koble dette 
 ---
 ### 1.0 Legg til riktig token fra Spotify
 
-_For å få tilgang til dine Spotify-spillelister, trenger vi riktig token._
+_For å få tilgang til dine Spotify-spillelister, må vi lage en Spotify App._
 
 **Oppgave**
 
 1. Gå til https://developer.spotify.com/
-2. Logg inn og scroll ned til **Code**
-3. Kopier token fra kodeeksemplet – dette er din token for å få tilgang til Spotify API'et
-4. Naviger til `.env`-filen og lim inn token fra Spotify for `SPOTIFY_ACCESS_TOKEN`
-5. I routes.py finnes det flere metoder som via fetch_web_app kaller på Spotify sine Rest endepunkter. I metoden get_playlist_tracks mangler vi å spesifisere metoden for rest kallet. Sjekk ut dokumentasjonen til Spotify, og legg til rett metode.
-
-**Eksempel:**
-
-Fra https://developer.spotify.com/:
-```javascript
-const token = 'eksempel_token123'
-```
-I .env filen:
-```
-SPOTIFY_ACCESS_TOKEN='eksempel_token123'
-```
+2. Klikk på profilikonet øverst til høyre, naviger til dashboard
+3. Trykk Create App, gi den et vilkårlig navn og beskrivelse. Det som er viktig er å huke av på 'Web API' under 'APIs used' og legge til riktig 'Redurect URI', vi skal bruke 'http://127.0.0.1:5000/callback'. 
+4. Lagre settings for web appen.
+5. Trykk på web appen, finn 'Client ID' og 'Client Secret' og lim inn verdiene i .env filen din, henholdsvis `SPOTIFY_CLIENT_ID` og `SPOTIFY_CLIENT_SECRET`. Viktig å ikke bruke fnutter(" eller ') rundt verdiene
+6. I routes.py finnes det flere metoder som via fetch_web_app kaller på Spotify sine Rest endepunkter. I metoden get_playlist_tracks mangler vi å spesifisere metoden for rest kallet. Sjekk ut dokumentasjonen til Spotify, og legg til rett metode.
 
 
 ### 1.1 Opprett en route i Frontend for å vise hjemsiden

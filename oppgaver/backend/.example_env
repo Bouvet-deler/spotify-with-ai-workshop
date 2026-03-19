@@ -10,4 +10,5 @@ AZURE_OPENAI_IMAGE_ENDPOINT=/openai/deployments/gpt-image-1/images/generations?a
 AZURE_OPENAI_CHAT_ENDPOINT=/openai/deployments/gpt-5/chat/completions?api-version=2025-01-01-preview
 
 #Spotify API access token
-SPOTIFY_ACCESS_TOKEN=
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=

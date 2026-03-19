@@ -5,6 +5,7 @@ import "./styles/App.css";
 import { PlaylistsPage } from "./pages/PlaylistsPage";
 import { GeneratorPage } from "./pages/GeneratorPage";
 import { CoverImageListPage } from "./pages/CoverImageListPage";
+import { TopPage } from "./pages/TopPage";
 import { Navbar } from "./components/Navbar/Navbar";
 import { Spinner } from "./components/Spinner/Spinner";
 
@@ -47,6 +48,7 @@ function App() {
             <Route path="/" element={<PlaylistsPage />} />
             <Route path="/cover/:playlistId" element={<GeneratorPage />} />
             <Route path="/gallery" element={<CoverImageListPage />} />
+            <Route path="/top" element={<TopPage />} />
           </Routes>
         </div>
       </Router>

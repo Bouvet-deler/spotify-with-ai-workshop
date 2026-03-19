@@ -23,6 +23,12 @@ export const Navbar = () => {
         >
           Gallery
         </Link>
+        <Link 
+          to="/top" 
+          className={`${styles.navLink} ${location.pathname === "/top" ? styles.active : ""}`}
+        >
+          Top
+        </Link>
       </div>
     </nav>
   );

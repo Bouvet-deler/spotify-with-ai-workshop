@@ -20,7 +20,7 @@ table_storage = TableStorageClient()
 spotify_token = SpotifyTokenClient()
 
 REDIRECT_URI = "http://127.0.0.1:5000/callback"
-SCOPES = "playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private ugc-image-upload user-read-private"
+SCOPES = "playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private ugc-image-upload user-read-private user-top-read"
 _state_store: set = set()
 
 
@@ -299,6 +299,26 @@ def get_cover_images():
         return jsonify({"error": "An error occurred while processing your request."}), 500
 
 
+@routes.route('/top-artists', methods=['GET'])
+def top_artists():
+    try:
+        artists = get_top_artists()
+        return jsonify(artists), 200
+    except Exception as e:
+        print(f"ERROR in top_artists: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@routes.route('/top-tracks', methods=['GET'])
+def top_tracks():
+    try:
+        tracks = get_top_tracks()
+        return jsonify(tracks), 200
+    except Exception as e:
+        print(f"ERROR in top_tracks: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 def fetch_web_api(endpoint, method, body=None):
     """Fetch from Spotify Web API
     Args:
@@ -339,6 +359,18 @@ def get_genre_seeds():
         'v1/recommendations/available-genre-seeds',
         'GET'
     )['genres']
+
+def get_top_artists():
+    """Get user's top artists"""
+    result = fetch_web_api('v1/me/top/artists', 'GET')
+    print("Top artists response:", result)
+    return result['items']
+
+def get_top_tracks():
+    """Get user's top tracks"""
+    result = fetch_web_api('v1/me/top/tracks', 'GET')
+    print("Top tracks response:", result)
+    return result['items']
 
 def get_playlist_tracks(playlist_id):
     """Get tracks in a playlist
