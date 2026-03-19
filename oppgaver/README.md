@@ -99,8 +99,12 @@ _For å få tilgang til dine Spotify-spillelister, må vi lage en Spotify App._
 5. Trykk på web appen, finn 'Client ID' og 'Client Secret' og lim inn verdiene i .env filen din, henholdsvis `SPOTIFY_CLIENT_ID` og `SPOTIFY_CLIENT_SECRET`. Viktig å ikke bruke fnutter(" eller ') rundt verdiene
 6. I routes.py finnes det flere metoder som via fetch_web_app kaller på Spotify sine Rest endepunkter. I metoden get_playlist_tracks mangler vi å spesifisere metoden for rest kallet. Sjekk ut dokumentasjonen til Spotify, og legg til rett metode.
 
+### 1.1 Fiks metodene som kaller på spotify endepunkter
 
-### 1.1 Opprett en route i Frontend for å vise hjemsiden
+_I routes.py er det tre metoder som er ufullstendig implementert. Fiks metodene slik at vi kaller endepunkter i Spotify API'et på en korrekt måte._
+
+
+### 1.2 Opprett en route i Frontend for å vise hjemsiden
 
 _Den ferdiglagde komponenten PlaylistPage viser en side i frontenden der brukerne kan se alle spillelistene sine. Vi skal nå sette opp en route som viser denne som hjemmesiden_
 
@@ -112,7 +116,7 @@ _Den ferdiglagde komponenten PlaylistPage viser en side i frontenden der brukern
 
 Når du har fullført oppgaven, skal **ImageUploadPage** vises på skjermen.
 
-### 1.2 Legg til knapp
+### 1.3 Legg til knapp
 
 _PlaylistCard-komponenten er hvert kort som viser alle spillelistene til brukeren, her ønsker vi å legge til en knapp som lar brukeren komme til en ny side, med mer info om spillelisten sin, og mulighet genere coverbilde eller beskrivelse av spillelisten sin._
 
@@ -127,20 +131,20 @@ _Hint: Link-komponenten bruker `to`-attributtet for å spesifisere hvor den skal
 
 Når oppgaven er fullført, skal man kunne trykke inn på hver spilleliste, og få listet opp sanger i spillelisten. 
 
-### 1.3 Endre bakgrunnsfarge
+### 1.4 Endre bakgrunnsfarge
 
 1. Naviger til ` cd styles/index.css `
 2. Bakgrunnen er nå hvit – bytt den til din favorittfarge!
 
 
-### 1.4 Lag en knapp for å generere coverbilde
+### 1.5 Lag en knapp for å generere coverbilde
 
 _På GeneratorPage-siden vises alle sangene i spillelisten. Nå skal vi legge til en knapp som lar brukeren generere et AI-basert coverbilde for spillelisten._
 
 **Oppgave**
 
 1. Naviger til `pages/GeneratorPage/GeneratorPage.tsx`
-2. Finn kommentaren `{/* TODO: 1.4 */}` 
+2. Finn kommentaren `{/* TODO 1.4 */}` 
 3. Erstatt kommentaren med en `<button>` som har følgende:
    - `onClick` skal kalle funksjonen `generateCover`
    - `disabled` skal være `true` når `generating` er `true` eller `tracks.length === 0`
@@ -209,7 +213,7 @@ _Når vi har generert et coverbilde med DALL-E 3, må vi lagre det i Azure Blob 
 
 1. Naviger til `clients/blob_storage_client.py` i backend.
 
-2. I metoden `upload_image_from_url`, finn kommentaren `# TODO: 2.4 Lag et unikt navn for blobben...`
+2. I metoden `upload_image_from_url`, finn kommentaren `# TODO2.4 Lag et unikt navn for blobben...`
    - Lag et unikt navn som følger mønsteret `covers/{user_id}/{playlist_id}.png`
    - Husk å bruke variablene `user_id` og `playlist_id` som blir sendt inn
 
@@ -225,7 +229,7 @@ _Vi må kunne hente alle lagrede coverimagene for en bruker fra Blob Storage._
 
 1. Naviger til `clients/blob_storage_client.py` i backend.
 
-2. I metoden `list_user_covers`, finn kommentaren `# TODO: 2.5 Hent ut alle blobs...`
+2. I metoden `list_user_covers`, finn kommentaren `# TODO2.5 Hent ut alle blobs...`
    - Bruk `self.container_client.list_blobs(name_starts_with=prefix)` for å hente alle blobs som starter med brukerens prefix
    - Tilordne resultatet til `blob_list`
 
@@ -239,7 +243,7 @@ _Når vi har sangene fra spillelisten, skal vi generere en beskrivelse ved hjelp
 
 1. Naviger til `services/routes.py` i backend, og finn `generate_description_for_playlist`-metoden.
 
-2. Finn kommentaren `# TODO: 2.6 Kall metoden for å generere beskrivelse...`
+2. Finn kommentaren `# TODO2.6 Kall metoden for å generere beskrivelse...`
    - Kall `description_generator.generate_description(track_names)` og tilordne resultatet til `description`-variabelen
 
 Når du har fullført oppgaven, skal du kunne generere en AI-basert tekstbeskrivelse av spillelisten.
@@ -252,7 +256,7 @@ _Etter at vi har generert en beskrivelse, skal vi lagre den permanent i Azure Ta
 
 1. Naviger til `services/routes.py` i backend, og finn `generate_description_for_playlist`-metoden.
 
-2. Finn kommentaren `# TODO: 2.7 Lagre den genererte beskrivelsen i table storage...`
+2. Finn kommentaren `# TODO2.7 Lagre den genererte beskrivelsen i table storage...`
    - Kall `table_storage.save_description_record()` med de relevante parameterne
 
 Når du har fullført oppgaven, skal alle genererte beskrivelser bli lagret permanent i Azure Table Storage.
