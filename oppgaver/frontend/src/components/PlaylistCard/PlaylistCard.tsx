@@ -9,7 +9,7 @@ export const PlaylistCard = ({ playlist }: PlaylistCardProps) => {
   return (
     <div className={styles.card}>
       <h3>{playlist.name}</h3>
-      {/* TODO: 1.2 */}
+      {/* TODO  1.3 */}
     </div>
   );
 };

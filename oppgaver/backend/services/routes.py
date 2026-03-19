@@ -123,7 +123,7 @@ def generate_cover_image_for_playlist():
         return jsonify({"error": "Missing 'userId' parameter"}), 400
 
     try:
-        # TODO2.4 Hent ut sangene fra spillelisten ved å kalle get_playlist_tracks(playlist_id)
+        # TODO 2.4 Hent ut sangene fra spillelisten ved å kalle get_playlist_tracks(playlist_id)
         tracks = list()  # Placeholder, erstatt med faktisk kall til get_playlist_tracks
         track_names = [item['item']['name'] for item in tracks]
         
@@ -160,7 +160,7 @@ def generate_description_for_playlist():
     try:
         tracks = get_playlist_tracks(playlist_id)
         track_names = [item['item']['name'] for item in tracks]
-        # TODO2.6 Kall metoden for å generere beskrivelse i DescriptionGenerator, hva skal du sende inn? Hva får du tilbake?
+        # TODO 2.6 Kall metoden for å generere beskrivelse i DescriptionGenerator, hva skal du sende inn? Hva får du tilbake?
         description = ""  # Placeholder, erstatt med faktisk kall til description_generator
         
         if description:
@@ -174,7 +174,7 @@ def generate_description_for_playlist():
             
             # Save description record to table storage
             try:
-                # TODO2.7 Lagre den genererte beskrivelsen i table storage ved å kalle save_description_record, hva skal du sende inn her?
+                # TODO 2.7 Lagre den genererte beskrivelsen i table storage ved å kalle save_description_record, hva skal du sende inn her?
                 print(f"Saved description record for playlist: {playlist_id}")
             except Exception as e:
                 print(f"WARNING: Could not save to table storage: {str(e)}")
@@ -240,21 +240,10 @@ def set_cover_image_for_playlist():
 
         # PUT to Spotify API — body must be base64-encoded JPEG string
         token = spotify_token.get_token()
-        res = requests.put(
-            f'https://api.spotify.com/v1/playlists/{playlist_id}/images',
-            headers={
-                'Authorization': f'Bearer {token}',
-                'Content-Type': 'image/jpeg'
-            },
-            data=jpeg_b64,
-            timeout=30
-        )
-
-        if res.status_code not in (200, 202):
-            print(f"Spotify API Error: {res.status_code} - {res.text}")
-            return jsonify({"error": f"Spotify API returned {res.status_code}"}), 500
-
-        return jsonify({"message": "Cover image updated successfully"}), 200
+        # TODO 2.9: Send en request til Spotify Web API for å sette spillelistens cover image.
+        # Hint: Bruk requests.put(), riktig endpoint er v1/playlists/{playlist_id}/images
+        # Body skal være jpeg_b64, og Content-Type headeren skal være 'image/jpeg'
+        return jsonify({"error": "TODO 2.9: Ikke implementert ennå"}), 501
 
     except Exception as e:
         print(f"ERROR in set_cover_image_for_playlist: {str(e)}")
@@ -326,15 +315,15 @@ def fetch_spotify_web_api(endpoint, method, body=None):
     if not spotify_token.is_authorized():
         raise Exception("User not authorized. Please visit /login first.")
     token = spotify_token.get_token()
-    # #TODO 1.1: Vi må sende en gyldig request til riktig lokasjon.
+    # #TODO  1.1: Vi må sende en gyldig request til riktig lokasjon.
     # Vi bruker requests biblioteket for å sende en HTTP request til Spotify Web API. 
     # en gyldig request består av riktig HTTP-metode (GET, POST, etc.), riktig endpoint URL, og nødvendige access token i headeren for autentisering.
     # Hvis det er en POST eller PUT request, må vi også sende med body som JSON.
     res = requests.request(
-        "", #TODOFyll inn riktig HTTP-metode
-        f'https://api.spotify.com/{""}', #TODOf-strengen mangler endpoint
-        headers={'Authorization': f'Bearer {""}'}, #TODOf-strengen mangler token
-        json="" #TODOLegg til Body i tilfelle det er POST eller PUT
+        "", #TODO Fyll inn riktig HTTP-metode
+        f'https://api.spotify.com/{""}', #TODO f-strengen mangler endpoint
+        headers={'Authorization': f'Bearer {""}'}, #TODO f-strengen mangler token
+        json="" #TODO Legg til Body i tilfelle det er POST eller PUT
     )
     
     if res.status_code != 200:
@@ -347,10 +336,10 @@ def fetch_spotify_web_api(endpoint, method, body=None):
 def get_playlists():
     """Get user's playlists"""
     try:
-        # #TODO 1.1: Her mangler vi gyldig endepunkt, finn ut hvilket endepunkt som blir korrekt ved å lese på spotify sin dokumentasjon
+        # #TODO  1.1: Her mangler vi gyldig endepunkt, finn ut hvilket endepunkt som blir korrekt ved å lese på spotify sin dokumentasjon
         # dokumentasjon for metoden vi skal bruke finnes her; https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists
         return fetch_spotify_web_api(
-            '', # #TODOFyll inn riktig endpoint for å hente brukerens spillelister
+            '', # #TODO Fyll inn riktig endpoint for å hente brukerens spillelister
             'GET'
         )['items']
     except Exception as e:
@@ -371,10 +360,10 @@ def get_top_artists():
     return result['items']
 
 def get_top_tracks():
-    """Get user's top tracks"""
-    result = fetch_spotify_web_api('v1/me/top/tracks', 'GET')
-    print("Top tracks response:", result)
-    return result['items']
+    # TODO  2.8: Implementer denne metoden for å hente brukerens top-tracks fra Spotify Web API.
+    # Hint: Se på hvordan get_top_artists() er implementert og gjør det samme for tracks.
+    # Dokumentasjon: https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
+    return []
 
 def get_playlist_tracks(playlist_id):
     """Get tracks in a playlist
@@ -384,7 +373,7 @@ def get_playlist_tracks(playlist_id):
     Returns:
         List of tracks in the playlist
     """
-    # TODO 1.1: Hvilken HTTP-metode skal brukes for å hente spillelistens sanger fra Spotify Web API? Trenger vi å sende noen data i body for dette kallet?
+    # TODO  1.1: Hvilken HTTP-metode skal brukes for å hente spillelistens sanger fra Spotify Web API? Trenger vi å sende noen data i body for dette kallet?
     # https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
     try:
         return fetch_spotify_web_api(

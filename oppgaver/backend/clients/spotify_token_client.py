@@ -9,7 +9,7 @@ class SpotifyTokenClient:
     def __init__(self):
         self.client_id = os.getenv("SPOTIFY_CLIENT_ID")
         self.client_secret = os.getenv("SPOTIFY_CLIENT_SECRET")
-        self._access_token = None
+        self._access_token = os.getenv("SPOTIFY_ACCESS_TOKEN") if os.getenv("SPOTIFY_ACCESS_TOKEN") else None # Check env var on startup for manual token
         self._refresh_token = None
         self._expires_at = 0
         self._load_persisted_token()

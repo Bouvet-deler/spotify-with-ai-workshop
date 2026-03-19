@@ -71,7 +71,10 @@ export const TopPage = () => {
       {loading && <Spinner />}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {artists && (
+      {artists && artists.length === 0 && (
+        <p style={{ color: "#b3b3b3" }}>No artists found.</p>
+      )}
+      {artists && artists.length > 0 && (
         <>
           <h3>Top Artists</h3>
           <ul className={styles.trackList}>
@@ -89,7 +92,10 @@ export const TopPage = () => {
         </>
       )}
 
-      {tracks && (
+      {tracks && tracks.length === 0 && (
+        <p style={{ color: "#b3b3b3" }}>No tracks found. Have you implemented get_top_tracks() in the backend?</p>
+      )}
+      {tracks && tracks.length > 0 && (
         <>
           <h3>Top Tracks</h3>
           <ul className={styles.trackList}>

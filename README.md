@@ -20,4 +20,4 @@ Ved slutten av workshoppen vil du ha en fullverdig applikasjon som demonstrerer 
 
 ## 📚 Oppgavene
 
-Oppgavene er merket med **TODO**, og befinner seg i frontend, backend og .env filer. Det finnes også et løsningsforslag i ./lf mappen hvis du trenger hjelp eller inspirasjon. 
+Oppgavene er merket med **TODO **, og befinner seg i frontend, backend og .env filer. Det finnes også et løsningsforslag i ./lf mappen hvis du trenger hjelp eller inspirasjon. 
